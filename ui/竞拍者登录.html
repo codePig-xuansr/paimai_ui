@@ -45,7 +45,7 @@
 
 						<el-form-item style="margin-top: 20px">
 							<el-button type="primary" @click="login">登录</el-button>
-							<el-button type="plain">注册</el-button>
+							<el-button type="plain" @click="zhuce">注册</el-button>
 							<a href="#" style="margin-left: 20px;vertical-align: bottom;line-height: 20px;">忘记密码</a>
 						</el-form-item>
 					</el-form>
@@ -100,6 +100,9 @@
 				}
 			},
 			methods: {
+				zhuce(){
+					location.href='竞拍者注册页.html';
+				},
 				blur() {
 					if(this.auth == "7chrr") {
 						return false;
