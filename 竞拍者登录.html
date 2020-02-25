@@ -4,12 +4,16 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="../css/index.css" />
-		<script type="text/javascript" src="../js/vue.js"></script>
-		<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
-		<script type="text/javascript" src="../js/jq_ajax_config.js"></script>
+		<link rel="stylesheet" href="css/index.css" />
+		<script type="text/javascript" src="js/vue.js"></script>
+		<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="js/jq_ajax_config.js"></script>
 	</head>
-
+<style type="text/css">
+	body{
+		
+	}
+</style>
 	<body>
 		<div id="adminLogin">
 			<el-col :span="8" :offset="8" class="grid-content bg-purple" style="box-shadow: 0px 0px 3px gray;padding: 10px;margin-top: 60px;">
@@ -59,13 +63,13 @@
 			</el-dialog>
 		</div>
 	</body>
-	<script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
 	<script type="text/javascript">
 		var adminLogin = new Vue({
 			el: "#adminLogin",
 			data: {
 				auth: "111",
-				src2: "../images/img2.jpg",
+				src2: "images/img2.jpg",
 				isShow1: false,
 				loginStatus: false,
 				message: "",
