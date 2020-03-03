@@ -66,17 +66,6 @@ body{
 						<el-input size="mini" v-model="forms.userCode" placeholder="请输入邮政编码"></el-input>
 					</el-col>
 				</el-form-item>
-				<el-form-item size="mini" label="验证码" prop="yzm">
-					<el-col>
-						<el-input size="mini" v-model="yzm" placeholder="请输入验证码"></el-input>
-					</el-col>
-				</el-form-item>
-				<el-form-item label="" prop="">
-					<el-col>
-						<span class="wordp lf"><img src="images/img2.jpg" width="96" height="36" alt="" /></span>
-            <span class="blues lf"><a href="" title="">看不清</a></span>
-					</el-col>
-				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="reg">注册</el-button>
 					<el-button type="danger" @click="cancel">取消</el-button>
@@ -101,17 +90,18 @@ body{
 			forms:{
 				userName:"",
 				userPwd:"",
+				power:0/*,
 				userIdCard:"",
 				userPhone:"",
 				userAddress:"",
-				userCode:""
+				userCode:""*/
 			},
 			yzm:"",
 			rules:{
 				userName:[{
-					min: 6,
+					min: 3,
 					required:true,
-					message:"用户名要求不低于6个字符",
+					message:"用户名要求不低于3个字符",
 					trigger:"blur"
 				}],
 				userPwd:[{
@@ -120,7 +110,7 @@ body{
 					message:"密码要求不低于6个字符",
 					trigger:"blur"
 				}],
-				userIdCard:[{
+				/*userIdCard:[{
 					required:true,
 					message:"身份证号必填",
 					trigger:"blur"
@@ -144,7 +134,7 @@ body{
 					required:true,
 					message:"请正确填写验证码",
 					trigger:"blur"
-				}],
+				}],*/
 			}
 		},
 		methods:{
@@ -162,25 +152,25 @@ body{
 							});
 							//延迟2秒，模拟网络延迟
 							setTimeout(() => {
-								this.$alert('注册成功！', '系统提示');
+								//this.$alert('注册成功！', '系统提示');
 								loading.close(); //关闭加载块【非常重要】
-								location.href='竞拍者登录.html';
-								/*$.ajax('http://localhost:8080/springmvc_4/api/persons/person', {
+								$.ajax(`http://127.0.0.1:8080/api/user/add`, {
 									type: 'post',
-									data: JSON.stringify(this.person),
+									data: JSON.stringify(this.forms),
 									dataType: 'json',
 									contentType: 'application/json',
-									success(msg) {
-										if(msg.code == "200") {
+									success(res) {
+										if(res.code == "200") {
 											loading.close(); //关闭加载块【非常重要】
 											_this.$message({
 												type: 'success',
-												message: '新增成功'
+												message: res.msg
 											});
+											location.href='glylogin.html';
 											_this.clearData(); //清除数据
 										}
 									}
-								});*/
+								});
 							}, 2000);
 						} else {
 							//验证失败
@@ -190,6 +180,14 @@ body{
 			},
 			cancel(){
 				location.href='glylogin.html';
+			},
+			clearData(){
+				this.userName='';
+				this.userPwd='';
+				this.userIdCard='';
+				this.userPhone='';
+				this.userAddress='';
+				this.userCode='';
 			}
 		}
 	});
