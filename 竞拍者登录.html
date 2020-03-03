@@ -9,23 +9,16 @@
 		<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="js/jq_ajax_config.js"></script>
 	</head>
-	
-	<style type="text/css">
-		body{
-			background: url(images/176883601953d6fbe75acde.jpg);
-			background-repeat: no-repeat;   //不重复
-    		background-size: 100% 100%;     // 满屏
-		}
-		[v-cloak] {
-				display: none;
-			}
-	</style>
-
+<style type="text/css">
+	body{
+		
+	}
+</style>
 	<body>
-		<div id="adminLogin" style="background-color: white; " v-cloak>
+		<div id="adminLogin">
 			<el-col :span="8" :offset="8" class="grid-content bg-purple" style="box-shadow: 0px 0px 3px gray;padding: 10px;margin-top: 60px;">
 				<div class="grid-content ">
-					<h4 style="color: gold;text-align: center;">用户登录</h4>
+					<h4 style="padding-left: 200px;">竞拍者登录</h4>
 					<el-form ref="loginFrom" :model="loginfrom" :rules="loginRules" label-width="100px">
 						<el-form-item label="用户名：" prop="userName">
 							<el-col :span="16">
@@ -34,16 +27,30 @@
 						</el-form-item>
 						<el-form-item label="用户密码：" prop="userPwd">
 							<el-col :span="16">
-								<el-input type="password" v-model="loginfrom.userPwd" placeholder="请输入密码"></el-input>
+								<el-input v-model="loginfrom.userPwd" placeholder="请输入用户密码"></el-input>
 							</el-col>
+						</el-form-item>
+
+						<el-form-item label="验证码：" prop="auth">
+							<el-col style="width: 120px;">
+								<el-input v-model="auth" placeholder="请输入验证码"></el-input>
+							</el-col>
+							<el-col style="width: 150px;height: 40px;">
+								<el-image :src="src2" style="height: 40px;margin-left: 10px;">
+									<div slot="placeholder" class="image-slot">
+										<i class="el-icon-setting"></i>
+									</div>
+								</el-image>
+							</el-col>
+							<a href="#" style="line-height: 20px;vertical-align: bottom;">看不清</a>
 						</el-form-item>
 
 						<el-checkbox style="margin-left: 70px;" label="记住密码" name="type"></el-checkbox>
 
 						<el-form-item style="margin-top: 20px">
-							<el-button type="success" @click="login">登录</el-button>
-							<el-button type="primary" @click="zhuce">注册</el-button>
-							<a href="#" style="margin-left: 20px;vertical-align: bottom;line-height: 20px;color: red;">忘记密码</a>
+							<el-button type="primary" @click="login">登录</el-button>
+							<el-button type="plain" @click="zhuce">注册</el-button>
+							<a href="#" style="margin-left: 20px;vertical-align: bottom;line-height: 20px;">忘记密码</a>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -68,8 +75,7 @@
 				message: "",
 				loginfrom: {
 					userName: "",
-					userPwd: "",
-					power:""
+					userPwd: ""
 				},
 				loginRules: {
 					userName: [{
@@ -99,23 +105,23 @@
 			},
 			methods: {
 				zhuce(){
-					location.href='jplogin.html';
+					location.href='竞拍者注册页.html';
+				},
+				blur() {
+					if(this.auth == "7chrr") {
+						return false;
+					}
+					return true;
 				},
 				login() {
-					let _this=this;
+					if(this.blur()) {
+						return
+					}
 					this.$refs['loginFrom'].validate(valid => {
 						if(valid) {
-							$.getJSON(`http://127.0.0.1:8080/api/user/login/${_this.loginfrom.userName}/${_this.loginfrom.userPwd}`,function(res){
-								if(res!=null){
-									localStorage.setItem("userName",res.username);
-									localStorage.setItem("power",res.power);
-									location.href="work.html"
-								}else{
-									this.$alert('登录时发生错误！', '系统提示');
-								}
-							})
+
 						} else {
-							this.$alert('请将表单填写完整！', '系统提示');
+							this.$alert('用户名或密码错误！', '系统提示');
 						}
 					});
 				},

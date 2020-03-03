@@ -109,15 +109,15 @@ font-weight: 900;
 <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
 
 
- <el-menu-item index="1"  v-if="power!='管理员'" @click="addUser('zhuye.html')">
+ <el-menu-item index="1"  v-if="power!=1" @click="addUser('zhuye.html')">
         <i class="el-icon-menu"></i>
         <span slot="title" >竞拍首页</span>
       </el-menu-item>
- <el-menu-item index="2"  v-if="power!='管理员'"  @click="addUser('goodsCount.html')">
+ <el-menu-item index="2"  v-if="power!=1"  @click="addUser('goodsCount.html')">
         <i class="el-icon-s-data"></i>
         <span slot="title" >竞拍数据</span>
       </el-menu-item>
-<el-submenu v-if="power=='管理员'" index="3">
+<el-submenu v-if="power==1" index="3">
     <template slot="title">
     	  	
     	 <i class="el-icon-setting"></i>
@@ -163,9 +163,9 @@ font-weight: 900;
 		var workapp=new _workapp1({
 			el:"#workapp",
 			data:{
-				tilte:"在线拍卖系统",
+				tilte:"",
 				power:"",
-				user:"张三",
+				user:"",
 				loading:false,
 				isCollapse:false
 			},
@@ -198,9 +198,9 @@ font-weight: 900;
       }
 			},
 			mounted(){
-			
-				this.power=window.sessionStorage.getItem("power");
-				if(this.power=="管理员"){
+				this.power=localStorage.getItem("power");
+				this.user=localStorage.getItem("userName");
+				if(this.power==1){
 					this.tilte="在线拍卖管理系统";
 				}
 			}

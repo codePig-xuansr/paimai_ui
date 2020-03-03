@@ -16,25 +16,22 @@
 			background-repeat: no-repeat;   //不重复
     		background-size: 100% 100%;     // 满屏
 		}
-		[v-cloak] {
-				display: none;
-			}
 	</style>
 
 	<body>
-		<div id="adminLogin" style="background-color: white; " v-cloak>
+		<div id="adminLogin" style="background-color: white;">
 			<el-col :span="8" :offset="8" class="grid-content bg-purple" style="box-shadow: 0px 0px 3px gray;padding: 10px;margin-top: 60px;">
 				<div class="grid-content ">
-					<h4 style="color: gold;text-align: center;">用户登录</h4>
+					<h4 style="padding-left: 200px;color: gold;">管理员登录</h4>
 					<el-form ref="loginFrom" :model="loginfrom" :rules="loginRules" label-width="100px">
 						<el-form-item label="用户名：" prop="userName">
 							<el-col :span="16">
-								<el-input v-model="loginfrom.userName" placeholder="请输入用户名"></el-input>
+								<el-input v-model="loginfrom.userName" placeholder="请输入管理员用户名"></el-input>
 							</el-col>
 						</el-form-item>
 						<el-form-item label="用户密码：" prop="userPwd">
 							<el-col :span="16">
-								<el-input type="password" v-model="loginfrom.userPwd" placeholder="请输入密码"></el-input>
+								<el-input v-model="loginfrom.userPwd" placeholder="请输入管理员密码"></el-input>
 							</el-col>
 						</el-form-item>
 
@@ -68,8 +65,7 @@
 				message: "",
 				loginfrom: {
 					userName: "",
-					userPwd: "",
-					power:""
+					userPwd: ""
 				},
 				loginRules: {
 					userName: [{
@@ -99,23 +95,23 @@
 			},
 			methods: {
 				zhuce(){
-					location.href='jplogin.html';
+					location.href='竞拍者注册页.html';
+				},
+				blur() {
+					if(this.auth == "7chrr") {
+						return false;
+					}
+					return true;
 				},
 				login() {
-					let _this=this;
+					if(this.blur()) {
+						return
+					}
 					this.$refs['loginFrom'].validate(valid => {
 						if(valid) {
-							$.getJSON(`http://127.0.0.1:8080/api/user/login/${_this.loginfrom.userName}/${_this.loginfrom.userPwd}`,function(res){
-								if(res!=null){
-									localStorage.setItem("userName",res.username);
-									localStorage.setItem("power",res.power);
-									location.href="work.html"
-								}else{
-									this.$alert('登录时发生错误！', '系统提示');
-								}
-							})
+
 						} else {
-							this.$alert('请将表单填写完整！', '系统提示');
+							this.$alert('用户名或密码错误！', '系统提示');
 						}
 					});
 				},
