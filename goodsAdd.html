@@ -19,16 +19,16 @@
     
  <el-form :model="goods" :rules="rules" ref="resetForm" label-width="100px" class="demo-ruleForm">
  	    <h1  style="text-align: center;height: 30px;    line-height: 30px; color: #E6A23C;">添加拍卖商品</h1>
-  <el-form-item label="名称" prop="nameMC">
-    <el-input style="width:300px;" v-model="goods.nameMC"></el-input>
+  <el-form-item label="名称" prop="goodsname">
+    <el-input style="width:300px;" v-model="goods.goodsname"></el-input>
   </el-form-item>
  
-   <el-form-item label="起拍价" prop="price">
+   <el-form-item label="起拍价" prop="goodsprice">
     						<el-input
     							style="width:300px;"
     maxlength="8"
     oninput="value=value.replace(/[^\d.]/g,'')"
-    v-model="goods.price"
+    v-model="goods.goodsprice"
     placeholder="请输入价格"
 clearable
   >
@@ -41,12 +41,12 @@ clearable
  <el-form-item label="结束时间" prop="endDate">
     <el-date-picker type="date" placeholder="选择日期" v-model="goods.endDate" style="width:300px;"></el-date-picker>
   </el-form-item>
-  <el-form-item label="描述" prop="nameMS">
-    <el-input style="width:300px;" type="textarea" v-model="goods.nameMS"></el-input>
+  <el-form-item label="描述" prop="depict">
+    <el-input style="width:300px;" type="textarea" v-model="goods.depict"></el-input>
   </el-form-item>
   
 
-  <el-form-item prop="goodsImg">
+  <el-form-item prop="goodsimg">
   <div style="float: right;margin-top: -43ex;margin-right:35ex;">
   <el-upload
   class="upload-demo"
@@ -75,17 +75,16 @@ clearable
       return {
       	fileList:[],
       goods:{
-      		goodsId:'',
           startDate:'',
           endDate:'',
-          nameMS:'',
-          nameMC:'',
-					price:'',
-					status:0,
-      		goodsImg:""
+          depict:'',
+          goodsname:'',
+					goodsprice:'',
+					statrc:0,
+      		goodsimg:''
       	},
         rules: {
-          nameMC: [
+          goodsname: [
             { required: true, message: '请输入名称', trigger: 'blur' }
           ],
           fileList: [
@@ -97,17 +96,28 @@ clearable
           endDate: [
             { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
           ],
-          price: [
+          goodsprice: [
             { required: true, message: '请输入起拍价格', trigger: 'blur' }
           ],
-          nameMS: [
+          depict: [
             { required: true, message: '请输入描述', trigger: 'blur' }
           ]
         }
       };
     },
     methods: {
-    	
+    	clearData(){
+    		this.fileList.splice(0,1);
+    		this.goods={
+	          startDate:'',
+	          endDate:'',
+	          depict:'',
+	          goodsname:'',
+						goodsprice:'',
+						statrc:0,
+	      		goodsimg:""
+	      	}
+    	},
     	/*图片操作*/
     	 handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -130,6 +140,21 @@ clearable
         });
       	}else{
       		alert('submit!');
+      		let _this=this;
+      		$.ajax(`http://127.0.0.1:8080/api/goods/good`,{
+      			type:"post",
+      			dataType:"json",
+      			contentType: 'application/json',
+      			data:JSON.stringify(_this.goods),
+      			success(res){
+      				if(res>0){
+      					_this.$alert('商品发布成功');
+      					_this.clearData();
+      				}else{
+      					_this.$alert('商品发布出错');
+      				}
+      			}
+      		});
       	}
             
           } else {
@@ -138,15 +163,34 @@ clearable
           }
         });
       },
+      toBase64(file){
+      	return new Promise(function(resolve,rej){
+      		let reader=new FileReader();
+      		let imgRes='';
+      		reader.readAsDataURL(file);
+      		reader.onload=function(){
+      			imgRes=reader.result;
+      		};
+      		reader.onerror=function(error){
+      			rej(error);
+      		};
+      		reader.onloadend=function(){
+      			resolve(imgRes);
+      		};
+      	})
+      },
       /*图片格式判断*/
       checkType(file,fileList){
-      	
+      	let _this=this;
       	/*不管怎么选择 只能选一张*/
       	let fileType=file.name.substring(file.name.lastIndexOf('.')+1);
    		this.fileList=[];//清除之前的
-      	this.fileList.splice(0,0,file);//保存现在选择的图片
       	if(fileType =='jpeg' || fileType =='jpg' || fileType == 'png' || fileType =='JPEG' || fileType =='JPG' || fileType == 'PNG'){
-      	
+      		_this.toBase64(file.raw).then(res=>{
+      			_this.fileList.splice(0,0,file);
+      			_this.fileList[0].url=res;
+      			_this.goods.goodsimg=res;
+      		})
       	}else{
       		
       		this.fileList=[];

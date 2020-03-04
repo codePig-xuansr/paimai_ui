@@ -107,8 +107,7 @@
 						if(valid) {
 							$.getJSON(`http://127.0.0.1:8080/api/user/login/${_this.loginfrom.userName}/${_this.loginfrom.userPwd}`,function(res){
 								if(res!=null){
-									localStorage.setItem("userName",res.username);
-									localStorage.setItem("power",res.power);
+									localStorage.setItem("user",JSON.stringify(res));
 									location.href="work.html"
 								}else{
 									this.$alert('登录时发生错误！', '系统提示');

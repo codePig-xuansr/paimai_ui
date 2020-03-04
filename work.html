@@ -198,8 +198,8 @@ font-weight: 900;
       }
 			},
 			mounted(){
-				this.power=localStorage.getItem("power");
-				this.user=localStorage.getItem("userName");
+				this.power=JSON.parse(localStorage.getItem("user")).power;
+				this.user=JSON.parse(localStorage.getItem("user")).username;
 				if(this.power==1){
 					this.tilte="在线拍卖管理系统";
 				}
