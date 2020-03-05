@@ -1,263 +1,216 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>无标题文档</title>
 
-<style type="text/css">
-	.el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    line-height:0px; 
-}
-.wrap {
-    width: 1000px;
-    text-align: center;
-    margin: 0 auto;
-}
-.el-pagination{
-    margin-top: 2ex;
-}
-.el-input__inner {
-	max-width: 128px;
-}
-.el-input{
-	max-width: 128px;
-}
-.forms>label{
-	font-size: 16px;
-}
-.forms{
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>无标题文档</title>
 
-	text-align: left;
-}
+		<style type="text/css">
+			.el-main {
+				background-color: #E9EEF3;
+				color: #333;
+				text-align: center;
+				line-height: 0px;
+			}
+			
+			.wrap {
+				width: 1000px;
+				text-align: center;
+				margin: 0 auto;
+			}
+			
+			.el-pagination {
+				margin-top: 2ex;
+			}
+			
+			.el-input__inner {
+				max-width: 128px;
+			}
+			
+			.el-input {
+				max-width: 128px;
+			}
+			
+			.forms>label {
+				font-size: 16px;
+			}
+			
+			.forms {
+				text-align: left;
+			}
+		</style>
+	</head>
 
-</style>
-</head>
+	<body>
+		<div class="wrap" id="goodsGLiListApp">
+			<!-- main begin-->
+			<div class="forms">
+				<label for="name">名称</label>
+				<el-input size="mini" placeholder="请输入名称" v-model="good.goodsname" clearable>
+				</el-input>
+				<label for="names">描述</label>
+				<el-input size="mini" placeholder="请输入描述" v-model="good.depict" clearable>
+				</el-input>
 
-<body>
-<div class="wrap" id="goodsGLiListApp">
-<!-- main begin-->
-  <div class="forms">
-    <label for="name">名称</label>
-<el-input
-	  	 size="mini"
-  placeholder="请输入名称"
-  v-model="good.goodsname"
-  clearable>
-</el-input>
-        <label for="names">描述</label>
-<el-input
-	  	 size="mini"
-  placeholder="请输入描述"
-  v-model="good.depict"
-  clearable>
-</el-input>
+				<label for="time">开始时间</label>
+				<el-date-picker size="mini" v-model="good.startdate" type="date" placeholder="开始时间" align="right" value-format="yyyy-MM-dd">
+				</el-date-picker>
 
-        <label for="time">开始时间</label>
-<el-date-picker
-           	 size="mini"
-      v-model="good.startdate"
-      type="date"
-      placeholder="开始时间"
-      align="right"
-      value-format="yyyy-MM-dd"
-     >
-    </el-date-picker>
+				<label for="end-time">结束时间</label>
+				<el-date-picker size="mini" v-model="good.enddate" type="date" placeholder="结束时间" align="right" value-format="yyyy-MM-dd">
+				</el-date-picker>
+				<label for="goodsprice">起拍价</label>
+				<el-input size="mini" maxlength="8" oninput="value=value.replace(/[^\d.]/g,'')" v-model="good.goodsprice" placeholder="请输入价格" clearable></el-input>
+				<el-button type="primary" @click="search">查看</el-button>
+			</div>
 
-        <label for="end-time">结束时间</label>
-           <el-date-picker
-           	 size="mini"
-      v-model="good.enddate"
-      type="date"
-      placeholder="结束时间"
-      align="right"
-      value-format="yyyy-MM-dd"
-   >
-    </el-date-picker>
-    <label for="goodsprice">起拍价</label>
-<el-input
-	 size="mini"
-    maxlength="8"
-    oninput="value=value.replace(/[^\d.]/g,'')"
-    v-model="good.goodsprice"
-    placeholder="请输入价格"
-clearable
-></el-input>
-   <el-button type="primary" @click="search">查看</el-button>
-  </div>
+			<template>
+				<el-table v-loading="loading" :data="pageinfo.list" border style="width: 100%">
+					<el-table-column prop="goodsname" label="名称" width="180">
+					</el-table-column>
+					<el-table-column prop="depict" label="描述" width="180">
+					</el-table-column>
+					<el-table-column prop="startdate" label="开始时间">
+					</el-table-column>
 
-  <template>
-   <el-table
-   	 v-loading="loading"
-    :data="pageinfo.list"
-    border
-    style="width: 100%">
-    <el-table-column
-      prop="goodsname"
-      label="名称"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="depict"
-      label="描述"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="startdate"
-      label="开始时间">
-    </el-table-column>
-    
-    <el-table-column
-      prop="enddate"
-      label="结束时间">
-    </el-table-column>
-    <el-table-column
-      prop="goodsprice"
-      label="起拍价">
-    </el-table-column>
-       <el-table-column
-      label="操作"
-      align="center"
-      >
-      <template slot-scope="temp">
-      	
-      	 <el-button
-          size="mini"
-            type="danger"
-          @click="update(temp.$index,temp.row)">修改</el-button>
-       <el-button
-          size="mini"
-          type="danger"
-          @click="goodsDelete(temp.$index,temp.row)">删除</el-button>
-          
-      </template>
-    </el-table-column>
-  </el-table>
-  <div class="block">
- 
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="1"
-      :page-sizes="[3,5,8]"
-      :page-size="pageinfo.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total=pageinfo.size>
-    </el-pagination>
-  </div>
-</template>
+					<el-table-column prop="enddate" label="结束时间">
+					</el-table-column>
+					<el-table-column prop="goodsprice" label="起拍价">
+					</el-table-column>
+					<el-table-column label="操作" align="center">
+						<template slot-scope="temp">
 
-<!-- main end-->
-</div>
+							<el-button size="mini" type="danger" @click="update(temp.$index,temp.row)">修改</el-button>
+							<el-button size="mini" type="danger" @click="goodsDelete(temp.$index,temp.row)">删除</el-button>
 
-</body>
-<script >
-var main={
-	  methods: {
-	  	search(){
-	  		this.good.size=this.pageinfo.pageSize;
-         this.good.num=this.pageinfo.pageNum;
-	  		this.queryList();
-	  	},
-	  	queryList(){
-	  		let _this=this;
-	  		$.ajax(`http://127.0.0.1:8080/api/goods/admin`,{
-	  			type:"post",
-	  			dataType:"json",
-      			contentType: 'application/json',
-      			data:JSON.stringify(_this.good),
-      			success(data){
-      				_this.pageinfo=data;
-      			}
-	  		});
-	  	},
-      handleSizeChange(val) {
-        this.good.size=val;
-         this.good.num=this.pageinfo.pageNum;
-        this.queryList();
-      },
-      handleCurrentChange(val) {
-      	/*这里是用来分页  参数val是当前页*/
-      	this.good.size=this.pageinfo.size;
-        this.good.num=val;
-        this.queryList();
-      },
-      /*修改*/
-      update(index,obj){ 	
-      	$("#cnt").load("goodsUpdate.html");
+						</template>
+					</el-table-column>
+				</el-table>
+				<div class="block">
 
-      },
-      handleClose(done){
-					this.$confirm("是否关闭！").then(()=>{
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :page-sizes="[3,5,8]" :page-size="pageinfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total=pageinfo.total>
+					</el-pagination>
+				</div>
+			</template>
+
+			<!-- main end-->
+		</div>
+
+	</body>
+	<script>
+		var main = {
+			methods: {
+				search() {
+					this.good.size = this.pageinfo.pageSize;
+					this.good.num = this.pageinfo.pageNum;
+					this.queryList();
+				},
+				queryList() {
+					let _this = this;
+					$.ajax(`http://127.0.0.1:8080/api/goods/admin`, {
+						type: "post",
+						dataType: "json",
+						contentType: 'application/json',
+						data: JSON.stringify(_this.good),
+						success(data) {
+							_this.pageinfo = data;
+						}
+					});
+				},
+				handleSizeChange(val) {
+					this.good.size = val;
+					this.good.num = this.pageinfo.pageNum;
+					this.queryList();
+				},
+				handleCurrentChange(val) {
+					/*这里是用来分页  参数val是当前页*/
+					this.good.size = this.pageinfo.size;
+					this.good.num = val;
+					this.queryList();
+				},
+				/*修改*/
+				update(index, obj) {
+					localStorage.setItem("obj", JSON.stringify(obj));
+					//console.info(obj);return;
+					$("#cnt").load("goodsUpdate.html");
+
+				},
+				handleClose(done) {
+					this.$confirm("是否关闭！").then(() => {
 						done(); //关闭
-					}).catch(()=>{
+					}).catch(() => {
 						//错误
 						console.debug('取消操作');
 					})
+				},
+				/*删除*/
+				goodsDelete(index, obj) {
+					let _this = this;
+					this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						workapp.loading = true;
+						setTimeout(() => {
+							$.ajax(`http://127.0.0.1:8080/api/goods/good`, {
+								type: "delete",
+								dataType: "json",
+								contentType: "application/json",
+								data:JSON.stringify(obj.goodsid),
+								success(res) {
+									if(res > 0) {
+										workapp.loading = false;
+										_this.pageinfo.list.splice(index, 1)
+										_this.$alert('删除成功');
+									}
+
+								}
+							})
+
+						}, 500);
+
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消删除'
+						});
+					});
+
 				}
-      ,
-      /*删除*/
-      goodsDelete(index,obj){
-      let _this=this;
-      	  this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-        	workapp.loading=true;
-        	setTimeout(()=>{
-        		workapp.loading=false;
-        		_this.goods.splice(index,1)
-        		   this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        	},500);
-        	
-        	
-       
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
-      	
-      }
-    },
-    data() {
-      return {
-      	dialogFormVisible:false,
-      	loading:true,
-      	good:{
-      		goodsId:'',
-          startdate:'',
-          enddate:'',
-          depict:'',
-          goodsname:'',
-			goodsprice:'',
-			num:"",
-			size:""
-      		
-      	},
-        pageinfo:{}
-      }
-    },
-		mounted(){
-			let _this=this;
-			setTimeout(()=>{
-				_this.loading=false;
-				$.getJSON(`http://127.0.0.1:8080/api/goods`,function(data){
-					console.info(data)
-					_this.pageinfo=data;
-				})
-			},1000);
-			
+			},
+			data() {
+				return {
+					dialogFormVisible: false,
+					loading: true,
+					good: {
+						goodsId: '',
+						startdate: '',
+						enddate: '',
+						depict: '',
+						goodsname: '',
+						goodsprice: '',
+						num: "",
+						size: ""
+
+					},
+					pageinfo: {}
+				}
+			},
+			mounted() {
+				let _this = this;
+				setTimeout(() => {
+					_this.loading = false;
+					$.getJSON(`http://127.0.0.1:8080/api/goods`, function(data) {
+						console.info(data)
+						_this.pageinfo = data;
+					})
+				}, 1000);
+
+			}
 		}
-  }
-	var goodsGLiListApp=Vue.extend(main);
-			new goodsGLiListApp().$mount("#goodsGLiListApp")
-</script>
+		var goodsGLiListApp = Vue.extend(main);
+		new goodsGLiListApp().$mount("#goodsGLiListApp")
+	</script>
+
 </html>
