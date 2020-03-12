@@ -177,7 +177,7 @@
 							confirmButtonText: '确定'
 						})
 					}
-					else if(parseFloat(_this.price) > parseFloat(this.good.goodsprice)) {
+					else if(parseFloat(_this.price) >= parseFloat(this.good.goodsprice)) {
 						_this.detail={
 							userid:JSON.parse(localStorage.getItem("user")).userid,
 							goodsid:_this.good.goodsid,
@@ -192,6 +192,7 @@
 							data:JSON.stringify(_this.detail),
 							success:function(res){
 								if(res>0){
+									_this.price='';
 									_this.$alert('竞拍成功！');
 								}else{
 									_this.$alert('竞拍出错！');

@@ -185,7 +185,7 @@
 				let _this = this;
 				setTimeout(() => {
 					_this.loading = false;
-					$.getJSON(`http://127.0.0.1:8080/api/goods`, function(data) {
+					$.getJSON(`http://127.0.0.1:8080/api/goods/ing`, function(data) {
 						console.info(data)
 						_this.pageinfo = data;
 					})
